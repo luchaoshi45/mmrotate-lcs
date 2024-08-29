@@ -2,7 +2,7 @@
 
 ## 1 Install
 
-### Env
+### Eenvironment
 ```shell
 xjtu@liyaochen122
 xjtu@liyaochen2024
@@ -35,8 +35,9 @@ pip install mamba_ssm-2.2.2+cu118torch2.0cxx11abiFALSE-cp38-cp38-linux_x86_64.wh
 
 ## 2 Run
 
-### Train
+### Train On DOTA
 ```shell
+CUDA_VISIBLE_DEVICES=1,2 /
 tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s.py 2
 
 tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_drfnet.py 2
@@ -46,4 +47,18 @@ tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s_mamb
 tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s_rfla.py 2
 
 tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s_mamba_rfla.py 2
+```
+
+### Train On HRSC
+```shell
+CUDA_VISIBLE_DEVICES=1,2 /
+tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_lsk_s.py 2
+
+tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_drfnet.py 2
+
+tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_lsk_s_mamba.py 2
+
+tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_lsk_s_rfla.py 2
+
+tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_lsk_s_mamba_rfla.py 2
 ```
