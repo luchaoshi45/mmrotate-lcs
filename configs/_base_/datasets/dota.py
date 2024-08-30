@@ -1,14 +1,12 @@
-# dataset settings
 dataset_type = 'DOTADataset'
-# trian默认删除空标签 val和test 默认不会删除空标签
 data_root = '../../data-2/'
 # data_root = '../../data-small/'
 img_size = 1024
 
-file_client_args = dict(backend='disk')
+backend_args = None
 
 train_pipeline = [
-    dict(type='mmdet.LoadImageFromFile', file_client_args=file_client_args),
+    dict(type='mmdet.LoadImageFromFile', backend_args=backend_args),
     dict(type='mmdet.LoadAnnotations', with_bbox=True, box_type='qbox'),
     dict(type='ConvertBoxType', box_type_mapping=dict(gt_bboxes='rbox')),
     dict(type='mmdet.Resize', scale=(img_size, img_size), keep_ratio=True),
@@ -25,7 +23,7 @@ train_pipeline = [
     dict(type='mmdet.PackDetInputs')
 ]
 val_pipeline = [
-    dict(type='mmdet.LoadImageFromFile', file_client_args=file_client_args),
+    dict(type='mmdet.LoadImageFromFile', backend_args=backend_args),
     dict(type='mmdet.Resize', scale=(1024, 1024), keep_ratio=True),
     # avoid bboxes being resized
     dict(type='mmdet.LoadAnnotations', with_bbox=True, box_type='qbox'),
@@ -36,7 +34,7 @@ val_pipeline = [
                    'scale_factor'))
 ]
 test_pipeline = [
-    dict(type='mmdet.LoadImageFromFile', file_client_args=file_client_args),
+    dict(type='mmdet.LoadImageFromFile', backend_args=backend_args),
     dict(type='mmdet.Resize', scale=(1024, 1024), keep_ratio=True),
     dict(
         type='mmdet.PackDetInputs',
@@ -54,14 +52,11 @@ train_dataloader = dict(
         data_root=data_root,
         ann_file='trainval/trainval_annfiles/',
         data_prefix=dict(img_path='trainval/images/'),
-       # img_shape=(1024, 1024),
         filter_cfg=dict(filter_empty_gt=True),
         pipeline=train_pipeline))
 val_dataloader = dict(
     batch_size=8,
     num_workers=8,
-    # batch_size=1,
-    # num_workers=2,
     persistent_workers=True,
     drop_last=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
@@ -70,7 +65,6 @@ val_dataloader = dict(
         data_root=data_root,
         ann_file='trainval/trainval_annfiles/',
         data_prefix=dict(img_path='trainval/images/'),
-       # img_shape=(1024, 1024),
         filter_cfg=dict(filter_empty_gt=True),
         test_mode=True,
         pipeline=val_pipeline))
@@ -84,8 +78,6 @@ val_evaluator = dict(type='DOTAMetric', metric='mAP')
 test_dataloader = dict(
     batch_size=16,
     num_workers=8,
-    # batch_size=1,
-    # num_workers=2,
     persistent_workers=True,
     drop_last=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
@@ -93,7 +85,6 @@ test_dataloader = dict(
         type=dataset_type,
         data_root=data_root,
         data_prefix=dict(img_path='test/images/'),
-        #img_shape=(1024, 1024),
         test_mode=True,
         pipeline=test_pipeline))
 test_evaluator = dict(
