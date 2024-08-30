@@ -1,6 +1,7 @@
 sh drfnet.sh
 sh drfnet_hrsc.sh
 sh drfnet.sh 1
+sh drfnet.sh && sh drfnet.sh 1
 
 ____________________________________________________【dist_train】
 CUDA_VISIBLE_DEVICES=1,2 \
