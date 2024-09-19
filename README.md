@@ -4,16 +4,11 @@
 
 ### Eenvironment
 ```shell
-xjtu@liyaochen122
-xjtu@liyaochen2024
+conda create --name lcs_mmrotate --no-default-packages python=3.8
+# conda remove --name lcs_mmrotate --all
+# rm -r /data1/anaconda3/envs/lcs_mmrotate
 
-su root
-conda create --name lcs_mmrotate-lcs --no-default-packages python=3.8
-# conda remove --name lcs_mmrotate-lcs --all
-# rm -r /data1/anaconda3/envs/lcs_mmrotate-lcs
-
-su lyc
-conda activate lcs_mmrotate-lcs
+conda activate lcs_mmrotate
 ```
 
 ### Requirements
@@ -21,6 +16,7 @@ conda activate lcs_mmrotate-lcs
 pip install --upgrade pip
 pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
 
+pip install -U openmim
 pip install mmengine==0.10.4
 mim install mmcv==2.0.1
 mim install mmdet==3.0.0
@@ -28,9 +24,10 @@ mim install mmpretrain==1.2.0
 pip install triton==2.0.0
 pip install transformers==4.42.4
 pip install timm
+pip install future tensorboard
 # github down
-pip install causal_conv1d-1.4.0+cu118torch2.0cxx11abiFALSE-cp38-cp38-linux_x86_64.whl
-pip install mamba_ssm-2.2.2+cu118torch2.0cxx11abiFALSE-cp38-cp38-linux_x86_64.whl
+pip install ../../pretrain/causal_conv1d-1.4.0+cu118torch2.0cxx11abiFALSE-cp38-cp38-linux_x86_64.whl
+pip install ../../pretrain/mamba_ssm-2.2.2+cu118torch2.0cxx11abiFALSE-cp38-cp38-linux_x86_64.whl
 ```
 
 ## 2 Run
@@ -53,7 +50,7 @@ tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s_mamb
 
 ### Train On HRSC
 ```shell
-CUDA_VISIBLE_DEVICES=1,2 /
+CUDA_VISIBLE_DEVICES=4,6 /
 tools/dist_train.sh configs/comp/oriented_rcnn/oriented-rcnn-le90_r50_fpn_3x_hrsc.py 2
 
 tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_lsk_s.py 2
