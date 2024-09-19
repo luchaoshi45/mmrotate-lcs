@@ -4,7 +4,7 @@ data_root = '../../data-5/'
 backend_args = None
 
 # 需要 Pad
-__K__ = 2
+__K__ = 0.5
 __scale__ = (int(640/__K__), int(512/__K__))
 __test_scale__ = __scale__
 batch_size = 16
