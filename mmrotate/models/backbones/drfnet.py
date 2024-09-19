@@ -10,8 +10,10 @@ from mmengine.model import (BaseModule, constant_init, normal_init,
                             trunc_normal_init)
 from torch.nn.modules.utils import _pair as to_2tuple
 from mmrotate.registry import MODELS
-
-from mamba_ssm import Mamba
+try:
+    from mamba_ssm import Mamba
+except ImportError:
+    print('Mamba not found, please install mamba_ssm first')
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 
 class PVT2FFN(nn.Module):

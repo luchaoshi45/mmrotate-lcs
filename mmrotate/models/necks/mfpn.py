@@ -7,8 +7,10 @@ from mmcv.cnn.bricks.transformer import PatchEmbed
 from mmengine.model import ModuleList
 from mmengine.model.weight_init import trunc_normal_
 from mmpretrain.models import build_2d_sincos_position_embedding
-
-from transformers.models.mamba.modeling_mamba import MambaMixer
+try:
+    from transformers.models.mamba.modeling_mamba import MambaMixer
+except:
+    print("Please install transformers to use MambaMixer")
 
 from mmrotate.registry import MODELS
 from mmpretrain.models.utils import build_norm_layer, to_2tuple
