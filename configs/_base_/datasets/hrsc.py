@@ -5,14 +5,14 @@ backend_args = None
 
 # 需要 Pad
 __K__ = 1
-__scale__ = (int(800/__K__), int(800/__K__))
+img_size = int(800/__K__)
 __test_scale__ = (800, 800)
 
 train_pipeline = [
     dict(type='mmdet.LoadImageFromFile', backend_args=backend_args),
     dict(type='mmdet.LoadAnnotations', with_bbox=True, box_type='qbox'),
     dict(type='ConvertBoxType', box_type_mapping=dict(gt_bboxes='rbox')),
-    dict(type='mmdet.Resize', scale=__scale__, keep_ratio=True),
+    dict(type='mmdet.Resize', scale=(img_size, img_size), keep_ratio=True),
     dict(
         type='mmdet.RandomFlip',
         prob=0.75,
@@ -21,16 +21,16 @@ train_pipeline = [
                 type='RandomRotate',
                 prob=0.5,
                 angle_range=180,),
-    dict(type='mmdet.Pad', size=__scale__, pad_val=dict(img=(114, 114, 114))),
+    dict(type='mmdet.Pad', size=(img_size, img_size), pad_val=dict(img=(114, 114, 114))),
     dict(type='mmdet.PackDetInputs')
 ]
 val_pipeline = [
     dict(type='mmdet.LoadImageFromFile', backend_args=backend_args),
-    dict(type='mmdet.Resize', scale=__scale__, keep_ratio=True),
+    dict(type='mmdet.Resize', scale=(img_size, img_size), keep_ratio=True),
     # avoid bboxes being resized
     dict(type='mmdet.LoadAnnotations', with_bbox=True, box_type='qbox'),
     dict(type='ConvertBoxType', box_type_mapping=dict(gt_bboxes='rbox')),
-    dict(type='mmdet.Pad', size=__scale__, pad_val=dict(img=(114, 114, 114))),
+    dict(type='mmdet.Pad', size=(img_size, img_size), pad_val=dict(img=(114, 114, 114))),
     dict(
         type='mmdet.PackDetInputs',
         meta_keys=('img_id', 'img_path', 'ori_shape', 'img_shape',
