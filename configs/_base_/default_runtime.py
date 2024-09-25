@@ -29,7 +29,7 @@ log_level = 'INFO'
 load_from = None
 resume = False
 
-EMA
+# EMA
 custom_hooks = [
     dict(type='mmdet.NumClassCheckHook'),
     dict(

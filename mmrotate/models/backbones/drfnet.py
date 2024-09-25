@@ -137,21 +137,17 @@ class LSKblock(nn.Module):
         self.conv2 = nn.Conv2d(dim, dim//2, 1)
         self.use_mamba = use_mamba
         self.conv_squeeze = nn.Conv2d(2, 2, 7, padding=3)
+        self.conv = nn.Conv2d(dim//2, dim, 1)
 
-        if use_mamba:
+        if self.use_mamba:
+            self.conv_spatial = MambaBlock(dim)
             self.convx1 = nn.Conv2d(dim, dim, 1, groups=dim)
             self.convx2 = nn.Conv2d(dim, dim, 3, padding=1, groups=dim)
             self.convx3 = nn.Conv2d(dim, dim, 5, padding=2, groups=dim)
-            self.norm1 = nn.SyncBatchNorm(dim)
-            self.norm2 = nn.SyncBatchNorm(dim)
-            self.norm3 = nn.SyncBatchNorm(dim)
-            self.mamba = MambaBlock(dim)
-            self.conv3 = nn.Conv2d(dim, dim//2, 1)
-            self.conv4 = nn.Conv2d(dim, dim//2, 1)
-            self.conv = nn.Conv2d(dim, dim, 1)
-        else:
-            self.conv = nn.Conv2d(dim//2, dim, 1)
-
+            self.norm1 = nn.LayerNorm(dim)
+            self.norm2 = nn.LayerNorm(dim)
+            self.norm3 = nn.LayerNorm(dim)
+            self.weights = nn.Parameter(torch.ones(4))
 
     def forward(self, x):
         attn1 = self.conv0(x)
@@ -159,30 +155,23 @@ class LSKblock(nn.Module):
         attn1 = self.conv1(attn1)
         attn2 = self.conv2(attn2)
 
+        attn = torch.cat([attn1, attn2], dim=1)
+        avg_attn = torch.mean(attn, dim=1, keepdim=True)
+        max_attn, _ = torch.max(attn, dim=1, keepdim=True)
+        agg = torch.cat([avg_attn, max_attn], dim=1)
+        sig = self.conv_squeeze(agg).sigmoid()
+        attn = attn1 * sig[:,0,:,:].unsqueeze(1) + attn2 * sig[:,1,:,:].unsqueeze(1)
+        attn = self.conv(attn)
+        x = x * attn
+
         if self.use_mamba:
-            attn3 = self.norm1(self.convx1(x)) + self.norm2(self.convx2(x)) + self.norm3(self.convx3(x))
-            attn4 = self.mamba(attn3)
-            attn3 = self.conv3(attn3)
-            attn4 = self.conv4(attn4)
-            attn = torch.cat([attn1, attn3, attn2, attn4], dim=1)
-            avg_attn = torch.mean(attn, dim=1, keepdim=True)
-            max_attn, _ = torch.max(attn, dim=1, keepdim=True)
-            agg = torch.cat([avg_attn, max_attn], dim=1)
-            sig = self.conv_squeeze(agg).sigmoid()
-            attna = attn1 * sig[:,0,:,:].unsqueeze(1) + attn2 * sig[:,1,:,:].unsqueeze(1)
-            attnb = attn3 * sig[:,0,:,:].unsqueeze(1) + attn4 * sig[:,1,:,:].unsqueeze(1)
-            attn = torch.cat([attna, attnb], dim=1)
-            attn = self.conv(attn)
-            x = x * attn
-        else:
-            attn = torch.cat([attn1, attn2], dim=1)
-            avg_attn = torch.mean(attn, dim=1, keepdim=True)
-            max_attn, _ = torch.max(attn, dim=1, keepdim=True)
-            agg = torch.cat([avg_attn, max_attn], dim=1)
-            sig = self.conv_squeeze(agg).sigmoid()
-            attn = attn1 * sig[:,0,:,:].unsqueeze(1) + attn2 * sig[:,1,:,:].unsqueeze(1)
-            attn = self.conv(attn)
-            x = x * attn
+            x = (
+                    self.weights[0] * self.norm1(self.convx1(x)) +
+                    self.weights[1] * self.norm2(self.convx2(x)) +
+                    self.weights[2] * self.norm3(self.convx3(x)) +
+                    self.weights[3] * x
+                )
+            
         return x
 
 
