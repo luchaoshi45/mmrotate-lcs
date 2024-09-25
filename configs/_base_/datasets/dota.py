@@ -14,12 +14,12 @@ train_pipeline = [
         type='mmdet.RandomFlip',
         prob=0.75,
         direction=['horizontal', 'vertical', 'diagonal']),
-    # dict(
-    #     type='RandomRotate',
-    #     prob=0.5,
-    #     rect_obj_labels=[9, 11],
-    #     angle_range=180),
-    # dict(type='mmdet.Pad', size=(img_size, img_size), pad_val=dict(img=(114, 114, 114))),
+    dict(
+        type='RandomRotate',
+        prob=0.5,
+        rect_obj_labels=[9, 11],
+        angle_range=180),
+    dict(type='mmdet.Pad', size=(img_size, img_size), pad_val=dict(img=(114, 114, 114))),
     dict(type='mmdet.PackDetInputs')
 ]
 val_pipeline = [

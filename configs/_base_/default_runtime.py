@@ -29,13 +29,13 @@ log_level = 'INFO'
 load_from = None
 resume = False
 
-# EMA
-# custom_hooks = [
-#     dict(type='mmdet.NumClassCheckHook'),
-#     dict(
-#         type='EMAHook',
-#         ema_type='mmdet.ExpMomentumEMA',
-#         momentum=0.0002,
-#         update_buffers=True,
-#         priority=49)
-# ]
+EMA
+custom_hooks = [
+    dict(type='mmdet.NumClassCheckHook'),
+    dict(
+        type='EMAHook',
+        ema_type='mmdet.ExpMomentumEMA',
+        momentum=0.0002,
+        update_buffers=True,
+        priority=49)
+]
