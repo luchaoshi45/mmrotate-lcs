@@ -141,6 +141,10 @@ class LSKblock(nn.Module):
 
         if self.use_mamba:
             self.mamba = MambaBlock(dim)
+            self.gate_layer = nn.Sequential(
+                nn.Linear(3*dim, 3, bias=False),
+                nn.Softmax(dim=-1)
+            )      
             groups_K = dim
             self.convx1 = nn.Conv2d(dim, dim, 1, groups=dim//groups_K)
             self.convx2 = nn.Conv2d(dim, dim, 3, padding=1, groups=dim//groups_K)
@@ -149,10 +153,11 @@ class LSKblock(nn.Module):
             self.norm2 = nn.SyncBatchNorm(dim)
             self.norm3 = nn.SyncBatchNorm(dim)
             self.weights = nn.Parameter(torch.ones(6))
-
+                  
     def forward(self, x):
         if self.use_mamba:
-            x = self.mamba(x) * self.weights[0] + x * self.weights[1] 
+            # x = self.mamba(x) * self.weights[0] + x * self.weights[1]
+            x = self.forward_mamba(x) * self.weights[0] + x * self.weights[1] 
 
         attn1 = self.conv0(x)
         attn2 = self.conv_spatial(attn1)
@@ -178,6 +183,27 @@ class LSKblock(nn.Module):
             
         return x
 
+    def forward_mamba(self, x):
+        B = x.shape[0]
+        x_inputs = [x, torch.flip(x, [1])]
+        rand_index = torch.randperm(x.size(1))
+        x_inputs.append(x[:, rand_index])
+        x_inputs = torch.cat(x_inputs, dim=0)
+        # x_inputs = self.pre_norm(x_inputs.to(dtype=self.pre_norm.weight.dtype))
+        x_inputs = self.mamba(x_inputs)
+        forward_x, reverse_x, shuffle_x = torch.split(x_inputs, B, dim=0)
+        reverse_x = torch.flip(reverse_x, [1])
+        # reverse the random index
+        rand_index = torch.argsort(rand_index)
+        shuffle_x = shuffle_x[:, rand_index]
+        mean_forward_x = torch.mean(forward_x, dim=(2, 3))
+        mean_reverse_x = torch.mean(reverse_x, dim=(2, 3))
+        mean_shuffle_x = torch.mean(shuffle_x, dim=(2, 3))
+        gate = torch.cat([mean_forward_x, mean_reverse_x, mean_shuffle_x], dim=-1)
+        gate = self.gate_layer(gate)
+        gate = gate.unsqueeze(-1).unsqueeze(-1)
+        x = gate[:, 0:1] * forward_x + gate[:, 1:2] * reverse_x + gate[:, 2:3] * shuffle_x
+        return x
 
 
 class Attention(nn.Module):
