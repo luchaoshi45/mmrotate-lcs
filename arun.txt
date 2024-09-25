@@ -20,14 +20,14 @@ ____________________________________________________【get_flops】
 CUDA_VISIBLE_DEVICES=3 python tools/analysis_tools/get_flops.py \
 configs/bk/oriented-rcnn-le90_r50_fpn_1x_dota.py --shape 1024 1024
 
-CUDA_VISIBLE_DEVICES=3 python tools/analysis_tools/get_flops.py \
+python tools/analysis_tools/get_flops.py \
 configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s.py --shape 1024 1024
 
-CUDA_VISIBLE_DEVICES=3 python tools/analysis_tools/get_flops.py \
-configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s_mamba.py --shape 1024 1024
-
-CUDA_VISIBLE_DEVICES=1 python tools/analysis_tools/get_flops.py \
+python tools/analysis_tools/get_flops.py \
 configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_drfnet.py --shape 1024 1024
+
+python tools/analysis_tools/get_flops.py \
+configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s_mamba.py --shape 1024 1024
 _________________________________________________________________
 
 ____________________________________________________【analyze_logs】

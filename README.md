@@ -50,7 +50,7 @@ tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s_mamb
 
 ### Train On HRSC
 ```shell
-CUDA_VISIBLE_DEVICES=4,6 /
+CUDA_VISIBLE_DEVICES=3,4 /
 tools/dist_train.sh configs/comp/oriented_rcnn/oriented-rcnn-le90_r50_fpn_3x_hrsc.py 2
 
 tools/dist_train.sh configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_lsk_s.py 2
