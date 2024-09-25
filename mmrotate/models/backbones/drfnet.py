@@ -141,18 +141,18 @@ class LSKblock(nn.Module):
 
         if self.use_mamba:
             self.mamba = MambaBlock(dim)
-            groups_K = 8
+            groups_K = dim
             self.convx1 = nn.Conv2d(dim, dim, 1, groups=dim//groups_K)
             self.convx2 = nn.Conv2d(dim, dim, 3, padding=1, groups=dim//groups_K)
             self.convx3 = nn.Conv2d(dim, dim, 5, padding=2, groups=dim//groups_K)
             self.norm1 = nn.SyncBatchNorm(dim)
             self.norm2 = nn.SyncBatchNorm(dim)
             self.norm3 = nn.SyncBatchNorm(dim)
-            self.weights = nn.Parameter(torch.ones(4))
+            self.weights = nn.Parameter(torch.ones(6))
 
     def forward(self, x):
         if self.use_mamba:
-            x = self.mamba(x)
+            x = self.mamba(x) * self.weights[0] + x * self.weights[1] 
 
         attn1 = self.conv0(x)
         attn2 = self.conv_spatial(attn1)
@@ -170,10 +170,10 @@ class LSKblock(nn.Module):
 
         if self.use_mamba:
             x = (
-                    self.weights[0] * self.norm1(self.convx1(x)) +
-                    self.weights[1] * self.norm2(self.convx2(x)) +
-                    self.weights[2] * self.norm3(self.convx3(x)) +
-                    self.weights[3] * x
+                    self.weights[2] * self.norm1(self.convx1(x)) +
+                    self.weights[3] * self.norm2(self.convx2(x)) +
+                    self.weights[4] * self.norm3(self.convx3(x)) +
+                    self.weights[5] * x
                 )
             
         return x
