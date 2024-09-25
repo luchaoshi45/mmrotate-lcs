@@ -145,7 +145,7 @@ class LSKblock(nn.Module):
                 nn.Linear(3*dim, 3, bias=False),
                 nn.Softmax(dim=-1)
             )      
-            groups_K = dim
+            groups_K = 8
             self.convx1 = nn.Conv2d(dim, dim, 1, groups=dim//groups_K)
             self.convx2 = nn.Conv2d(dim, dim, 3, padding=1, groups=dim//groups_K)
             self.convx3 = nn.Conv2d(dim, dim, 5, padding=2, groups=dim//groups_K)
