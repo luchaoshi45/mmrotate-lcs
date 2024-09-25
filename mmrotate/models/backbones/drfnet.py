@@ -144,9 +144,9 @@ class LSKblock(nn.Module):
             self.convx1 = nn.Conv2d(dim, dim, 1, groups=dim)
             self.convx2 = nn.Conv2d(dim, dim, 3, padding=1, groups=dim)
             self.convx3 = nn.Conv2d(dim, dim, 5, padding=2, groups=dim)
-            self.norm1 = nn.LayerNorm(dim)
-            self.norm2 = nn.LayerNorm(dim)
-            self.norm3 = nn.LayerNorm(dim)
+            self.norm1 = nn.SyncBatchNorm(dim)
+            self.norm2 = nn.SyncBatchNorm(dim)
+            self.norm3 = nn.SyncBatchNorm(dim)
             self.weights = nn.Parameter(torch.ones(4))
 
     def forward(self, x):
