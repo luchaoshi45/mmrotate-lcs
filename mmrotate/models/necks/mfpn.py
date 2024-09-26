@@ -92,6 +92,10 @@ class MFPN(FPN):
                 init_cfg=init_cfg)
             self.mlayers.append(mlayer)
 
+        self.max_pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.avg_pool = nn.AvgPool2d(kernel_size=2, stride=2)
+        self.max_pool_mlp = nn.Linear(out_channels, out_channels)
+        self.avg_pool_mlp = nn.Linear(out_channels, out_channels)
 
     def forward(self, inputs: Tuple[Tensor]) -> tuple:
         """Forward function.
@@ -112,6 +116,10 @@ class MFPN(FPN):
         ]
 
         used_backbone_levels = len(laterals)
+
+        # build down-top path
+        for i in range(0, used_backbone_levels-1):
+            laterals[i+1] = self.downsampling(laterals[i]) + laterals[i+1]
 
         # mamba layers
         for i in range(0, used_backbone_levels-1):
@@ -160,6 +168,16 @@ class MFPN(FPN):
                         outs.append(self.fpn_convs[i](outs[-1]))
         return tuple(outs)
 
+    def downsampling(self, x: Tensor) -> Tensor:
+        max_pool_x = self.max_pool(x)
+        avg_pool_x = self.avg_pool(x)
+        max_pool_c = torch.mean(max_pool_x, dim=(2, 3), keepdim=False)
+        max_pool_c = self.max_pool_mlp(max_pool_c).sigmoid().unsqueeze(-1).unsqueeze(-1)
+        avg_pool_c = torch.mean(avg_pool_x, dim=(2, 3), keepdim=False)
+        avg_pool_c = self.avg_pool_mlp(avg_pool_c).sigmoid().unsqueeze(-1).unsqueeze(-1)
+        x = max_pool_c * max_pool_x + \
+            avg_pool_c * avg_pool_x
+        return x
 
 class MLayer(BaseModule):
     def __init__(self,

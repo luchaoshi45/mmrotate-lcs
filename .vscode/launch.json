@@ -5,13 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: 当前文件",
+            "name": "le90_r50_fpn_3x_hrsc_drfnet",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/tools/train.py",
             "args": [
                 // "configs/comp/oriented_rcnn/oriented-rcnn-le90_r50_fpn_3x_hrsc.py"
-                "configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_drfnet.py"
+                "configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_lsk_s_mamba.py"
+                // "configs/drfnet/oriented-rcnn-le90_r50_fpn_1x_dota_lsk_s_rfla.py"
+                // "configs/drfnet/oriented-rcnn-le90_r50_fpn_3x_hrsc_drfnet.py"
             ],
             "console": "integratedTerminal",
             "env": {
