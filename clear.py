@@ -69,7 +69,30 @@ class Clear:
         parent_dir = os.path.dirname(log_file_path)
         print(f"\033[91m【删除文件夹】 {parent_dir}\033[0m")
         shutil.rmtree(parent_dir)
-        
+
+class ShowWorkdir:
+    def __init__(self):
+        self.workdir = "work_dirs"
+        self.start_with = ['oriented-rcnn']  # 以这些前缀开头的文件夹
+        self.show_dir = "work_dirs_show"
+        if not os.path.exists(self.show_dir):
+            os.makedirs(self.show_dir)
+            
+    def run(self):
+        for root, dirs, files in os.walk(self.workdir):
+            for file in files:
+                if file.endswith('.log'):
+                    file_path = os.path.join(root, file)
+                    # Check if the file path starts with any of the specified prefixes
+                    if any(file_path.startswith(os.path.join(self.workdir, prefix)) 
+                           for prefix in self.start_with):
+                        new_name = root.split("/")[1] + "_" + file
+                        new_file_path = os.path.join(self.show_dir, new_name)
+                        shutil.copy(file_path, new_file_path)
+                        print(f"\033[92m【复制并重命名文件】 {file_path} \033[0m")
+  
 if __name__ == "__main__":
     clear = Clear()
     clear.run()
+    show_workdir = ShowWorkdir()
+    show_workdir.run()
