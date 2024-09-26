@@ -1,8 +1,16 @@
+import sys
+if sys.gettrace() is not None:
+    print('\033[91mDebug mode is active.\033[0m')
+    MODEL = "debug"
+    data_root = '../../data-small/'
+      
+else:
+    print('\033[91mRunning in normal mode.\033[0m')
+    MODEL = "normal"
+    data_root = '../../data-2/'
+    
 dataset_type = 'DOTADataset'
-data_root = '../../data-2/'
-# data_root = '../../data-small/'
 img_size = 1024
-
 backend_args = None
 
 train_pipeline = [
