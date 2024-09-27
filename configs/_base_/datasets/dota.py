@@ -7,7 +7,7 @@ if sys.gettrace() is not None:
 else:
     print('\033[91mRunning in normal mode.\033[0m')
     MODEL = "normal"
-    data_root = '../../data-2/'
+    data_root = '/input/file/split_ss_dota'
     
 dataset_type = 'DOTADataset'
 img_size = 1024

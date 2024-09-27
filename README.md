@@ -26,8 +26,8 @@ pip install transformers==4.42.4
 pip install timm
 pip install future tensorboard
 # github down
-pip install ../../pretrain/causal_conv1d-1.4.0+cu118torch2.0cxx11abiFALSE-cp38-cp38-linux_x86_64.whl
-pip install ../../pretrain/mamba_ssm-2.2.2+cu118torch2.0cxx11abiFALSE-cp38-cp38-linux_x86_64.whl
+pip install ../../pretrain/causal_conv1d-1.1.3+cu118torch1.13cxx11abiFALSE-cp38-cp38-linux_x86_64.whl
+pip install ../../pretrain/mamba_ssm-1.1.3+cu118torch1.13cxx11abiFALSE-cp38-cp38-linux_x86_64.whl
 ```
 
 ## 2 Run

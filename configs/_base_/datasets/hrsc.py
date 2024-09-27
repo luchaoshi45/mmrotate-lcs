@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'HRSCDataset'
-data_root = '../../data-1/'
+data_root = '/input/file/HRSC2016'
 backend_args = None
 
 # 需要 Pad
