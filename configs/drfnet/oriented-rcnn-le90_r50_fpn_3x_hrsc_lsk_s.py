@@ -1,7 +1,7 @@
-import os
-config_name = os.path.basename(os.path.abspath(__file__)).replace('.py', '')
+import sys, os
+config_name = sys.argv[2].split("/")[-1][:-3]
 work_dir = os.path.join("/output/work_dirs/work_dirs", config_name)
-print(f"\033[93m{work_dir}\033[0m")
+print(f"\033[94m{work_dir}\033[0m")
 
 _base_ = [
     '../_base_/datasets/hrsc.py', '../_base_/schedules/schedule_3x.py',
