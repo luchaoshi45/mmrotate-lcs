@@ -1,3 +1,8 @@
+import os
+config_name = os.path.basename(os.path.abspath(__file__)).replace('.py', '')
+work_dir = os.path.join("/output/work_dirs/work_dirs", config_name)
+print(f"\033[93m{work_dir}\033[0m")
+
 _base_ = [
     '../_base_/datasets/dota.py', '../_base_/schedules/schedule_1x.py',
     '../_base_/default_runtime.py'

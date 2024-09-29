@@ -13,6 +13,8 @@ dataset_type = 'DOTADataset'
 img_size = 1024
 backend_args = None
 
+outfile_prefix = '/output/work_dirs/work_dirs/dota/Task1'
+
 train_pipeline = [
     dict(type='mmdet.LoadImageFromFile', backend_args=backend_args),
     dict(type='mmdet.LoadAnnotations', with_bbox=True, box_type='qbox'),
@@ -100,4 +102,4 @@ test_evaluator = dict(
     predict_box_type='rbox',
     format_only=True,
     merge_patches=True,
-    outfile_prefix='./work_dirs/dota/Task1')
+    outfile_prefix=outfile_prefix)
