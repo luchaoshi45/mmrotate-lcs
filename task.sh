@@ -19,7 +19,7 @@ done
 
 
 # rm -rf mmrotate-lcs
-# git clone https://gitclone.com/github.com/luchaoshi45/mmrotate-lcs.git
+# git clone https://github.com/luchaoshi45/mmrotate-lcs.git
 # cd mmrotate-lcs
 # chmod -R 777 *
 # pip install -v -e .

@@ -14,7 +14,7 @@ dataset_type = 'DOTADataset'
 img_size = 1024
 backend_args = None
 
-timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+timestamp = datetime.now()
 outfile_prefix = f'/output/work_dirs/work_dirs/dota/{timestamp}'
 
 train_pipeline = [
