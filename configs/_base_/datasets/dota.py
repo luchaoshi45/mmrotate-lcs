@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 if sys.gettrace() is not None:
     print('\033[91mDebug mode is active.\033[0m')
     MODEL = "debug"
@@ -13,7 +14,8 @@ dataset_type = 'DOTADataset'
 img_size = 1024
 backend_args = None
 
-outfile_prefix = '/output/work_dirs/work_dirs/dota/Task1'
+timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+outfile_prefix = f'/output/work_dirs/work_dirs/dota/{timestamp}'
 
 train_pipeline = [
     dict(type='mmdet.LoadImageFromFile', backend_args=backend_args),
