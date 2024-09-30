@@ -14,8 +14,8 @@ dataset_type = 'DOTADataset'
 img_size = 1024
 backend_args = None
 
-timestamp = datetime.now()
-outfile_prefix = f'/output/work_dirs/work_dirs/dota/{timestamp}'
+timestamp = str(datetime.now())
+outfile_prefix = '/output/work_dirs/work_dirs/dota/' + timestamp
 
 train_pipeline = [
     dict(type='mmdet.LoadImageFromFile', backend_args=backend_args),
